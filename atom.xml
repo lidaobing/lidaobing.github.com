@@ -1,0 +1,32 @@
+---
+layout: nil
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>LI Daobing's Blog</title>
+  <link href="http://blog.lidaobing.com/"/>
+  <link type="application/atom+xml" rel="self" href="http://blog.lidaobing.com/atom.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>http://blog.lidaobing.com/</id>
+  <author>
+    <name>LI Daobing</name>
+    <email>lidaobing@gmail.com</email>
+  </author>
+
+  {% for post in site.posts %}
+  <entry>
+    <id>http://blog.lidaobing.com{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="http://blog.lidaobing.com{{ post.url }}"/>
+    <title>{{ post.title }}</title>
+    <published>{{ post.date | date_to_xmlschema }}</published>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>LI Daobing</name>
+      <uri>http://blog.lidaobing.com/</uri>
+    </author>
+    <content type="html">{{ post.content | xml_escape }}</content>
+  </entry>
+  {% endfor %}
+
+</feed>
