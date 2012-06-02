@@ -1,0 +1,13 @@
+---
+layout: post
+name: approx
+title: approx
+date: 2010-10-08 23:51:00.000000000 +08:00
+categories:
+- linux
+- debian
+- approx
+- ubuntu
+permalink: /2010/10/approx.html
+---
+打包时经常需要反复下载一些包, 如果你的网速不够快，建议安装 approx 透明代理, 可以缓存大部分包。<br /> <br />1. 如何安装 approx<br />安装方法: "sudo apt-get install approx", 然后修改配置文件 /etc/approx/approx.conf 为<br />ubuntu http://cn.archive.ubuntu.com/ubuntu<br />debian http://mirrors.163.com/debian <br />修改 /etc/apt/sources.list, 修改为如下的内容<br />deb http://127.0.0.1:9999/ubuntu lucid main restricted universe multiverse<br />deb http://127.0.0.1:9999/ubuntu lucid-security main restricted universe multiverse<br />deb http://127.0.0.1:9999/ubuntu lucid-updates main restricted universe multiverse<br /> <br />2. approx 的优点<br />2.1 可以在局域网内共享, approx 缺省绑定在 0.0.0.0, 所以一个局域网内用户可以共享这个源，互相加速, 如果使用安装法部署大量机器时也非常快速<br />2.2 i386 和 amd64 系统可以互相加速(因为可以互相共享架构无关的包)，karmic 和 lucid 也可以互相共享包 (某些包在这两个版本是一致的), 但 debian 和 ubuntu 之间不能共享包<br />2.3 即使单人使用， approx 也很有帮助，比如可以快速重建 linux chroot, pbuilder, 或者在虚拟机内重装一份debian/ubunu<br />2.4 可以模拟多线程下载，比如你要同时安装 vim 和 emacs, 可以先运行 "sudo apt-get install vim", 然后在下载时按 Ctrl+C 终端，然后运行 "sudo apt-get install emacs23", 这时候 approx 会在后台帮你下载 vim 所需的包 (一般会帮你下载前面5个)<br />2.5 智能cache, debian/ubuntu 仓库有逐级签名, approx 能快速判定一个文件，是不是完整的，是不是最新的, 也可以定时清理掉不再被使用的文件。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-6508420263406166886?l=lidaobing.blogspot.com' alt='' /></div>

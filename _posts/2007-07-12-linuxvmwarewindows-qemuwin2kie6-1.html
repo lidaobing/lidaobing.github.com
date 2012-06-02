@@ -1,0 +1,10 @@
+---
+layout: post
+name: linuxvmwarewindows-qemuwin2kie6-1
+title: 
+date: 2007-07-12 10:51:00.000000000 +08:00
+categories:
+- linux
+permalink: /2007/07/linuxvmwarewindows-qemuwin2kie6-1.html
+---
+  前不久有人抱怨说Linux下使用虚拟机vmware运行windows无法使用招商银行信用卡。<br><br>今天拿 qemu+win2k+ie6 试了一下，网络管理和支付都成功了<br><br>可能是<br>1. 招商银行不检测虚拟机了<br>2. 招商银行只检测vmware，不检测qemu<br>3. win2k 下面检测功能失效<br><hr style="width: 100%; height: 2px;">从 sunny 的反馈来看，他的 vmware+win2k 没有成功，那么成功的原因很可能是2<br><br>以前用过vmware，似乎记得他的虚拟硬件都带有 vmware 的标记，也许是招行的控件根据这个来判定这个是否是虚拟机。qemu似乎没有这个问题。<br><br>P.S. 以前某个版本的超星阅读器可以防止打印到 PDF，后来发现把 PDF 打印机改个名就可以继续打印了，不知道 把vmware 的显卡之类的硬件改个名是否能避开招行的检测。不过招行仍然可以检测硬件驱动、硬件ID等，也许仍然不管用。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-7862964394450162651?l=lidaobing.blogspot.com' alt='' /></div>

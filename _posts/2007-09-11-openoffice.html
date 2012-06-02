@@ -1,0 +1,11 @@
+---
+layout: post
+name: openoffice
+title: 
+date: 2007-09-11 23:06:00.000000000 +08:00
+categories:
+- linux
+- openoffice.org
+permalink: /2007/09/openoffice.html
+---
+    在 Openoffice.org 中插入矢量图<br><br>Openoffice.org 支持的矢量图格式有 EPS, EMF, WMF, SVM 等，但最容易获得的 EPS 的支持效果非常差。其他容易获得的矢量图格式 PS, PDF, SVG 都不支持。所以我需要将 EPS 转换为 EMF 格式。<br><br>你需要如下的工具:<br>1. pstoedit:  http://www.pstoedit.net/pstoedit<br>2. transfig: http://www-epb.lbl.gov/xfig/<br>我的 Ubuntu 系统自带这两种工具<br><br>步骤:<br>1. pstoedit -f fig a.eps a.fig<br>pstoedit 还支持从 ps 和 pdf 格式转换<br>2. fig2dev -L emf a.fig a.emf<br> <br> 附:<br> 1. pstoedit 的 man 中提到可以直接转换为 emf, wmf 格式，但我的 Ubuntu 自带的版本不支持。<br> 2. pstoedit 支持转换到 svm 格式，但图片失真严重。<br> <br><br><br><br><br><br>  <div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-3118176608433410449?l=lidaobing.blogspot.com' alt='' /></div>

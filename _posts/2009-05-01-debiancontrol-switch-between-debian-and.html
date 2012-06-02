@@ -1,0 +1,12 @@
+---
+layout: post
+name: debiancontrol-switch-between-debian-and
+title: ! 'debian/control: switch between debian and ubuntu format'
+date: 2009-05-01 16:00:00.000000000 +08:00
+categories:
+- packaging
+- debian
+- ubuntu
+permalink: /2009/05/debiancontrol-switch-between-debian-and.html
+---
+<pre><br />#!/usr/bin/env python                                                                   <br /><br />import logging<br />import sys    <br /><br />log = logging.getLogger(__name__)<br /><br />def main():<br />    lines = file('debian/control').readlines()<br /><br />    l1 = None<br />    l2 = None<br /><br />    for idx, x in enumerate(lines):<br />        if x.startswith('Maintainer:'):<br />            l1 = idx                   <br />        elif x.startswith('XSBC-Original-Maintainer:'):<br />            l2 = idx<br /><br />    if l1 is None:<br />        log.error("can't find maintainer line")<br />        sys.exit(1)<br /><br />    isUbuntu = l2 is not None<br /><br />    if isUbuntu:<br />        maintainer = lines[l2].lstrip('XSBC-Original-Maintainer:').strip()<br />    else:<br />        maintainer = lines[l1].lstrip('Maintainer:').strip()<br /><br />    if isUbuntu:<br />        lines[l1] = 'Maintainer: %s\n' % maintainer<br />        del lines[l2]<br />    else:<br />        lines[l1] = 'Maintainer: Ubuntu MOTU Developers &lt;ubuntu-motu@lists.ubuntu.com>\n' \<br />                + 'XSBC-Original-Maintainer: %s\n' % maintainer<br /><br />    file('debian/control', 'w').writelines(lines)<br /><br />if __name__ == '__main__':<br />    main()<br /></pre><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-1166226056999062745?l=lidaobing.blogspot.com' alt='' /></div>

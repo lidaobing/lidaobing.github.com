@@ -1,0 +1,14 @@
+---
+layout: post
+name: gobject
+title: 尝试了一下直接写 gobject
+date: 2009-03-17 20:43:00.000000000 +08:00
+categories:
+- glib
+- gob
+- linux
+- gobject
+- c
+permalink: /2009/03/gobject.html
+---
+先说结论吧: 1. 痛苦的体验，2. 用面向过程的语言来做面向对象的事时你需要处理很多繁琐的事情 3. 用 gob2 之类的工具可以改善体验。<br /><br /><h3>基本结构</h3><br />这部分有模板可以套(30-40行)，你只需要把里面的名字换成自己的类的名字, 不过由于存在全大写, 首字母大写，用下划线分割的小写三种情况，所以你需要替换三次。<br /><br />在这一步，你定义了 6 个宏，两个 struct 和两个函数 xxx_init 和 xxx_class_init.<br /><br /><br /><h3>处理析构</h3><br />如果你的对象引用了其他对象，或者有动态分配的内存(比如字符串), 那么你就需要处理析构的问题。 gobject 为了解决循环引用的问题，所以析构分为两步, 第一步是解除对其他对象的引用(这一步叫做 dispose), 第二步是释放动态分配的内存(叫做 finialize)。在这一步中，你需要添加一个全局静态变量保存 parent_class, 定义 xxx_dispose 和 xxx_finalize (记得通过 parent_class 调用父类的对应的析构函数)， 在 xxx_class_init 代码中初始化 parent_class, 已经把 xxx_dispose 和 xxx_finalize 关联到这个类。<br /><br /><h3>私有成员</h3><br />封装很重要，所以私有成员不应当放到头文件中，所以类 Xxx 的定义应该如下所示。<br /><pre><br />struct _Xxx {<br />  GObject parent_instance;<br />  XxxPrivate* priv; <br />}<br /></pre><br />gobject 用了一个小技巧来防止生成一个对象时分配两次内存，他可以让生成对象时申请的内存大小为 sizeof(Xxx) + sizeof(XxxPrivate)，当然这个是可选的。<br /><br />通常，你为了支持私有成员，你需要添加一个宏，同时在 xxx_init 和 xxx_class_init 中加入必要的初始化代码。<br /><br /><h3>属性</h3><br />gobject 的属性主要功能是为了实现事件监听，你可以在属性上挂回调函数来监听属性的改变。如果你不需要的监听的话，那么简单的一个私有成员，再加上 set 和 get 函数即可。实现属性是一件很郁闷的事，你首先要定义一个 enum 来给每个属性一个顺序号, 然后定义 xxx_get_property 和 xxx_set_property 来覆盖基类的实现，然后在 xxx_class_init 中为没个属性定义一个包含属性元数据的结构，最后依次用 g_object_class_install_property 安装。<br /><br />仅有这些似乎还不够,你一般还需要定义一些辅助函数或辅助宏来降低用户使用的难度，包括 set, get, signal_connect 等。<br /><br /><h3>信号</h3><br />其实属性的大部分的功能都可以用信号来实现(在属性的 set 函数上 emit 一个 foo-changed 信号)，而且 signal 的写法比较简单，无须重写 xxx_set_property 和 xx_get_property。<br /><br /><h3>总之</h3><br />总之，写的很烦，而且写了半天还没有写到业务代码，每增加一个属性或者信号都需要不少的工作量。看了一下 python 的 gobject 封装感觉很漂亮(见下), gob2 也不错，能让你开发得开心一点。<br /><br /><pre><br />import gobject<br /><br />class MyObject(gobject.GObject):<br /><br />    foo = gobject.property(type=str, default='bar')<br />    boolprop = gobject.property(type=bool, default=False)<br /><br />    def __init__(self):<br />        gobject.GObject.__init__(self)<br /><br />    @gobject.property<br />    def readonly(self):<br />        return 'readonly'<br /><br /></pre><br /><br />最后补一句，虽然 C 语言有些繁琐，但 C 平台真的非常成功，有空再补一下我对平台，库，语言三者关系的观点。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-4595895517046075522?l=lidaobing.blogspot.com' alt='' /></div>

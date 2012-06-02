@@ -1,0 +1,10 @@
+---
+layout: post
+name: wikipedia-1
+title: 
+date: 2006-09-25 20:38:00.000000000 +08:00
+categories:
+- wikipedia
+permalink: /2006/09/wikipedia-1.html
+---
+在中国大陆使用wikipedia是一个需要技巧的工作，我采用如下的方案<br />注: 以下方法都能从网上找到，放在这儿的只是我觉得最方便的一种组合<br /><br />1. 安装firefox<br />2a. Linux下的修改/etc/hosts，添加如下的几行<br />145.97.39.138 en.wikipedia.org<br />145.97.39.138 en.wikibooks.org<br />145.97.39.138 zh-yue.wikipedia.org<br />145.97.39.138 ja.wikipedia.org<br />145.97.39.138 ko.wikipedia.org<br />145.97.39.138 upload.wikimedia.org<br /># 145.97.39.131-139都是可以的<br /># 实际上还有更多的域名需要添加，这些是常见的<br />2b. windows下需要修改 c:\windows\system32\drivers\etc\hosts 文件，添加内容同上<br />3. 安装firefox的扩展gladder，地址如下<br /><a title="http://gneheix.googlepages.com/gladder" href="http://gneheix.googlepages.com/gladder">http://gneheix.googlepages.com/gladder</a><br />重启firefox<br />4. 添加如下的两个bookmark<br />[1] <a title="https://secure.wikimedia.org/wikipedia/zh/wiki/" href="https://secure.wikimedia.org/wikipedia/zh/wiki/">https://secure.wikimedia.org/wikipedia/zh/wiki/</a><br />[2] <a title="http://en.wikipedia.org/wiki/Main_Page" href="http://en.wikipedia.org/wiki/Main_Page">http://en.wikipedia.org/wiki/Main_Page</a><br />5. 使用的时候中文从[1]进入，英文从[2]进入，在英文页面点中文的跨语言链接之前，左键点一下gladder的图标(在状态栏)<br /><br />辅助方案(Linux)<br />1. 安装tor, privoxy<br />2. 配置/etc/privoxy/config，添加如下的一句:<br />forward-socks4a / localhost:9050 .<br />3. 安装firefox扩展 torbutton<br /><br />辅助方案(Windows)<br />1. 安装torpark<br /><br />tor速度很慢，而且用了上面的方案后就很少用到tor了，事实上遇到偶然被封之后我一般选择换一个代理继续上(用xyzproxy[3]插件换代理比较方便)<br />[3] <a title="http://xyzboard.com/?q=taxonomy/term/6/map" href="http://xyzboard.com/?q=taxonomy/term/6/map">http://xyzboard.com/?q=taxonomy/term/6/map</a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-115918790844934257?l=lidaobing.blogspot.com' alt='' /></div>

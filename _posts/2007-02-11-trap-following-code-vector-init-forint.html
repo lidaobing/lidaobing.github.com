@@ -1,0 +1,11 @@
+---
+layout: post
+name: trap-following-code-vector-init-forint
+title: 
+date: 2007-02-11 13:28:00.000000000 +08:00
+categories:
+- c++
+- coder
+permalink: /2007/02/trap-following-code-vector-init-forint.html
+---
+a trap I met today<br /><br />the following code:<br /><br /><pre><br />vector&lt;int><int> a;<br />// init a<br />for(int i = 0; i < a.size()-1; i+=2) {<br />  // do something;<br />}<br /></pre><br /><br /> will crash if a is empty, because a.size() return a size_t, which is unsigned, then a.size()-1 is a very large unsigned value. it should be changed to:  <br /><br /><pre><br />vector<int><int>&lt;int> a;<br />// init a<br />for(int i = 0; i+1 < a.size(); i+=2) {<br />  // do something;<br />}<br /></pre><br /><br />P.S. I does not consider a.size() > 2G, at least it will not happen in this program.<br /></int></int></int><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-1744445769584739489?l=lidaobing.blogspot.com' alt='' /></div>

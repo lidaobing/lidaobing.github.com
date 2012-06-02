@@ -1,0 +1,11 @@
+---
+layout: post
+name: kdeqt-kdeqtbitstream-1
+title: 
+date: 2007-03-18 00:24:00.000000000 +08:00
+categories:
+- linux
+- i18n
+permalink: /2007/03/kdeqt-kdeqtbitstream-1.html
+---
+  KDE/QT 程序的中文字体配置<br><br>目的: 让大部分KDE/QT程序无须配置即可显示中文，并且优先使用bitstream之类的字体来显示英文，再用宋体来显示中文。<br><br>1. 安装qt3-qtconfig<br>2. 运行LC_ALL=C qtconfig-qt3<br>2.1 打开fonts tab<br>2.2 在"Fonts Substitution"下面的下拉框里选择"Serif"<br>2.3 在最下面的"Select substitution Family"右边的下拉框选择"Bitstream Vera Serif", 点击右边的"Add"按钮<br>2.4 重复2.3步，把"DejaVu Serif", "FreeSerif", "AR PL ShanHeiSun Uni"加入列表<br>2.5 重复2.2-2.4步，设置"Sans Serif", "Monospace"的替换字体，注意选择对应的字体<br>2.6 保存<br>3. 运行LC_ALL=zh_CN.utf8 qtconfig-qt3，重复2的步骤，把"文鼎PL细上海宋Uni"加入替换列表<br>4. 运行qtconfig-qt4，重复2-3的步骤<br>5. 备份 $HOME/.qt/qtrc, $HOME/.config/Trolltech.conf<br><br>注意，最后的两个配置文件的位置可能在不同的发行版之间略有不同，建议用strace -o ~/qtconfig.log qt3-qtconfig来追踪位置。<br><br><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-2100880976388967134?l=lidaobing.blogspot.com' alt='' /></div>

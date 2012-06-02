@@ -1,0 +1,10 @@
+---
+layout: post
+name: pythonpython-numeric-import-numeric
+title: 
+date: 2007-05-05 01:02:00.000000000 +08:00
+categories:
+- coder
+permalink: /2007/05/pythonpython-numeric-import-numeric.html
+---
+下面这段python代码会吃掉你的所有内存，是时候抛弃python-numeric了<br /><br /><pre><br />import Numeric<br />import numpy<br />a = Numeric.zeros([1, 1])<br />while True:<br />  a[0, 0] = numpy.int32(0)<br /></pre><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-2742747315034060426?l=lidaobing.blogspot.com' alt='' /></div>
