@@ -1,0 +1,14 @@
+---
+layout: default
+---
+
+<div class="well">
+  <h2>Category: <a href="/categories/{{page.category}}">{{page.category}}</a></h2>
+     <time datetime='{{ post.date | date_to_utc | date:"%Y-%m-%dT%H:%M:00Z" }}' class='entry-time'>{{ post.date | date:"%B %d, %Y @ %H:%M" }}</time>
+  <ol>
+  {% for post in site.categories[page.category] %}
+  <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+  {% endfor %}
+  </ol>
+</div>
+{{ content }}

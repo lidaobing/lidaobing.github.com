@@ -1,0 +1,17 @@
+---
+layout: default
+---
+
+<div class="well">
+  <h2>
+    <a href="{{ page.url }}" title="{{ page.title }}" rel="bookmark">{{ page.title }}</a>
+  </h2>
+     <time datetime='{{ post.date | date_to_utc | date:"%Y-%m-%dT%H:%M:00Z" }}' class='entry-time'>{{ post.date | date:"%B %d, %Y @ %H:%M" }}</time>
+  {{ content }}
+  <p class="alt-font tight">
+    Tags:
+    {% for tag in page.tags %}
+    <a href="http://www.google.com/search?q={{ tag | escape }}+site:blog.lidaobing.com">{{ tag }}</a>{% if forloop.last == false %}, {% endif %}
+    {% endfor %}
+  </p>
+</div>

@@ -1,0 +1,58 @@
+---
+layout: post
+title: "[有问有答] 如何用邮件安全地传递密码"
+tags: gpg
+---
+<p>Q: 我想把一个密码用邮件发给我的朋友，这么避免发送过程中被人窃听导致泄密</p>
+<p>A: 使用 GPG 加密即可，具体步骤如下</p>
+<p><strong>假设小王想发送密码给我，那么我首先做如下操作</strong></p>
+<p>1. 生成一个新的 GPG key:</p>
+<blockquote>
+<p>$ gpg --gen-key</p>
+</blockquote>
+<p>中间需要输入一些必要的信息</p>
+<p>2. 确认 GPG key</p>
+<div class="cnblogs_code">
+<pre>$ gpg -K<br />/home/lidb/.gnupg/secring.gpg<br />-----------------------------<br />sec   2048R/E0084AC3 <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span><br />uid                  LI Daobing &lt;lidaobing@gmail.com&gt;<br />ssb   2048R/FFB0140F <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span></pre>
+</div>
+<p>3. 导出 GPG 的公钥</p>
+<blockquote>
+<p>$ gpg --export --armor E0084AC3 &gt; lidaobing.key</p>
+</blockquote>
+<p>4. 把生成的 lidaobing.key 发送给小王</p>
+<p>&nbsp;</p>
+<p><strong>小王收到 lidaobing.key 后，要如下步骤操作</strong></p>
+<p>1. 导入 GPG 公钥</p>
+<blockquote>
+<p>$&nbsp;gpg --import lidaobing.key</p>
+</blockquote>
+<p>2. 确认导入成功</p>
+<div class="cnblogs_code">
+<pre>$ gpg -k<br />/home/everbox/.gnupg/pubring.gpg<br />--------------------------------<br />pub   2048R/E0084AC3 <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span><br />uid                  LI Daobing &lt;lidaobing@gmail.com&gt;<br />sub   2048R/FFB0140F <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span></pre>
+</div>
+<p>3. 加密文件</p>
+<div class="cnblogs_code">
+<pre>$ gpg --recipient lidaobing@gmail.com --encrypt password.txt <br />gpg: FFB0140F: There <span style="color: #0000ff;">is</span> no assurance <span style="color: #0000ff;">this</span> key belongs to the named user<br /><br />pub  2048R/FFB0140F <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span> LI Daobing &lt;lidaobing@gmail.com&gt;<br /> Primary key fingerprint: 6E39 DB6A 37EE <span style="color: #800080;">0704</span> 62B0  F7FA 5C26 5D2C E008 4AC3<br />      Subkey fingerprint: DDE0 42FC 8D79 BB4F 72AC  06E8 658A F431 FFB0 140F<br /><br />It <span style="color: #0000ff;">is</span> NOT certain that the key belongs to the person named<br /><span style="color: #0000ff;">in</span> the user ID.  If you *really* know what you are doing,<br />you may answer the next question with yes.<br /><br />Use <span style="color: #0000ff;">this</span> key anyway? (y/N) y</pre>
+</div>
+<p>4. 把生成的 password.txt.gpg 发给我。</p>
+<p>&nbsp;</p>
+<p><strong>我收到 password.txt.gpg 后需要做如下的操作</strong></p>
+<p>1. 解密</p>
+<div class="cnblogs_code">
+<pre>$ gpg --output password.txt --decrypt password.txt.gpg<br /><br />You need a passphrase to unlock the secret key <span style="color: #0000ff;">for</span><br />user: <span style="color: #800000;">"</span><span style="color: #800000;">LI Daobing &lt;lidaobing@gmail.com&gt;</span><span style="color: #800000;">"</span><br /><span style="color: #800080;">2048</span>-bit RSA key, ID FFB0140F, created <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span> (main key ID E0084AC3)<br /><br />gpg: encrypted with <span style="color: #800080;">2048</span>-bit RSA key, ID FFB0140F, created <span style="color: #800080;">2011</span>-<span style="color: #800080;">12</span>-<span style="color: #800080;">16</span><br />      <span style="color: #800000;">"</span><span style="color: #800000;">LI Daobing &lt;lidaobing@gmail.com&gt;</span><span style="color: #800000;">"</span></pre>
+</div>
+<p>2. 查看 password.txt</p>
+<p>&nbsp;</p>
+<p><strong>备注</strong></p>
+<p>1. 生成的公钥 lidaobing.key 无须保密，可以反复使用，可以到处分发</p>
+<p>2. 你的公钥可以发布到一些公共的 GPG 平台，用于大家给你发送加密信息或者验证你的签名</p>
+<blockquote>
+<p>$ gpg --keyserver hkp://keys.gnupg.net --send-keys E0084AC3</p>
+</blockquote>
+<p>3. 如果你使用 thunderbird, 可以使用 enigmail 来协助你做加密，解密，签名，验证的工作</p>
+<p>&nbsp;</p>
+<p>参考</p>
+<p>1.&nbsp;<a href="http://www.madboa.com/geek/gpg-quickstart/">http://www.madboa.com/geek/gpg-quickstart/</a><br /><br /><br /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
