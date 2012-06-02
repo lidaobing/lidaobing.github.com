@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% if page.title %}
+  <title>{{ page.title }} - {{ site.title }}</title>
+  {% else %}
+  <title>{{ site.title }}</title>
+  {% endif %}
+
+  <meta name="author" content="Bilal Syed Hussain" />
+  {% if page.description %}
+  <meta name="description" content="{{ page.description }}" />
+  {% else %}
+  <meta name="description" content="{{site.title }} {{ page.title }}" />
+  {% endif %}
+
+  {% if page.keywords %}
+  <meta name="keywords" content="{{ page.keywords }}" />
+  {% endif %}
+
+  <meta name="robots" content="noodp, nydir" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap-responsive.min.css">
+    {% include google_analytics.html   %}
+</head>
+
+<body>
+  <div class="container">
+    {% include header.html %}
+    <div class="row">
+      <div id="main" class="span{% if page.no_sidebar %}12{% else %}9{% endif %}">
+        {{ content}}
+      </div>
+      {% unless page.no_sidebar %}
+        <div id="sidebar" class="span3">
+        {% include sidebar.html %}
+        </div>
+      {% endunless %}
+    </div>
+
+    <div class="row">
+      <div class="span12">
+        {% include footer.html %}
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+</body>
+</html>
