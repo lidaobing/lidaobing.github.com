@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[备忘] 把 bzr 仓库转为 git 仓库"
-tag: bzr git
+tags: bzr git
 ---
 
     $ sudo apt-get install bzr-fastimport git-core
