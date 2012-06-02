@@ -3,7 +3,7 @@ layout: post
 name: 2cents-ssh
 title: ssh 登录过慢的问题
 date: 2009-05-20 21:15:00.000000000 +08:00
-categories: []
+tags: ssh
 permalink: /2009/05/2cents-ssh.html
 ---
 [2cents] ssh 登录过慢的问题<br><br>可能原因<br><br>1. 服务端对客户端IP进行DNS反解过慢, 解决方法是在 /etc/ssh/sshd_config 中加入一行<br><br>UseDNS no<br><br>然后用 /etc/init.d/ssh restart 重启 DNS 服务 (ssh 重启时不会切断已有的连接)<br><br>2. 客户端 GSSAPI 认证过慢, 解决方法是在 $HOME/.ssh/config 中加入如下一段<br><br>Host *<br>&nbsp; GSSAPIAuthentication no<br><br><br>3. 其他情况，可以用 ssh -vvv hostname 查看 ssh 在哪一步等待时间最长，用对应的关键词搜索即可。<br><br><br><br><br><br><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-8345013339253034705?l=lidaobing.blogspot.com' alt='' /></div>

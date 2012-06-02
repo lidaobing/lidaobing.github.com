@@ -3,7 +3,7 @@ layout: post
 name: debian
 title: 什么样的软件可以进入 Debian
 date: 2010-05-01 18:23:00.000000000 +08:00
-categories: []
+tags: debian
 permalink: /2010/05/debian.html
 ---
 <div xmlns='http://www.w3.org/1999/xhtml'>Q: 什么样的软件可以进入 Debian?<br/>A: 首先是授权协议, 所有进入 Debian 的软件都必须满足 <a href='http://www.debian.org/social_contract'>DFSG</a>, 值得注意的是, DFSG 与自由软件的定义有不一致的地方, 比如 <a href='http://creativecommons.org/licenses/by-nc/2.0/'>cc-by-nc 协议</a>就不是 DFSG 兼容的, <a href='http://www.debian.org/vote/2006/vote_001'>部分 GFDL 文档</a>(含有不可变文本) 也不满足 DFSG, 如果你对软件授权是否满足 DFSG 拿不准, 那么可以到 <a href='http://lists.debian.org/debian-legal/'>debian-legal</a> 咨询<br/><br/>剩下的是一些非强制的标准, 但 Debian 开发人员会通过这些来判定一个包是否值得上传:<br/><ul><li>上游是否仍然在维护这个软件， 这个尽管不是强制标准, 但除非这个软件不可替代(比如 mutt?), 否则一般不会收纳这种软件.<br/></li><li>与现在仓库中同类软件相比, 这个软件的特点是什么？这条就比较容易达到, 毕竟哪个软件没有自己的特点呢？功能, 基础库(比如 GTK vs QT), 速度, 大小, 等等都可以是自己软件的特点。<br/></li><li>软件质量如何？是否经常崩溃?</li><li>软件的用户数多少？几乎没人使用的软件很难保证质量。<br/></li><li>如果没有 Debian 打包流程, 用户直接使用是否方便, 比如不依赖于本地库的 firefox 插件就倾向于不要打包, 因为安装起来实在是太方便了</li><li>如果你在打包一个库的话, 这个库是否有程序使用？ 如果没有程序使用, 那么这是否是一个重要的开发工具包? 如果都不是话, 那么一般不会收纳这种库.</li></ul>以上其实都不是强制标准, 其实最关键的问题是是否有人愿意贡献时间来打包和进行后续维护, 打包后能否说服 Debian 开发人员帮你上传。Technorati Tags: <a class='performancingtags' href='http://technorati.com/tag/debian' rel='tag'>debian</a></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-1092767701370251332?l=lidaobing.blogspot.com' alt='' /></div>

@@ -3,9 +3,7 @@ layout: post
 name: blog-post
 title: 程序治理
 date: 2009-06-28 14:40:00.000000000 +08:00
-categories:
-- c++
-- c
+tags: c c++
 permalink: /2009/06/blog-post.html
 ---
 <span style="font-style:italic;">本文是对许老大的 <a href="http://blog.csdn.net/xushiweizh/archive/2009/06/24/4295948.aspx">一篇博文</a> 的评论。</span><br /><br />垃圾回收是 C++ 语言层不具备的一个功能, boost shared_ptr 在库层次实现了这个功能。对于这种超越语言功能的库，我的建议就是加强程序治理: 对使用这些库建立一些规则, 扬长避短。<br /><ol><br /><li>对于同一个对象，要么完全使用 shared_ptr, 要么完全不使用 shared_ptr，原文提到的几个问题似乎都与这个相关。</li><br /><li>对于一个类，在设计时就要决定这个类是否要以 shared_ptr 方法来使用。</li><br /><li>对于需要用 shared_ptr 的类，建议采用如下的定义方式<br /><pre><br />class _Foo {<br />};<br />typedef boost::shared_ptr<_Foo> Foo;<br />Foo foo_new(constructor args...);<br /></pre><br /></li><br /></ol><br /><br />这套规则有一个变种(主要是为了解决 shared_ptr 的传播性问题): 限制 shared_ptr 在一个模块内部使用, 在模块的入口 API 处对需要返回的对象进行拷贝，以脱离 shared_ptr。<br /><br />C 语言的 gobject 和 pyobject 库都有 GC 的支持，但解决起来似乎比 C++ 顺利很多，我觉得有如下的原因<br /><ul><br /><li>类和GC的概念是同时引入的, 而 C++ 的解决方案则拆成了两块</li><br /><li>C++ 过于崇尚自由, 而 C 语言则已经在程序治理方面积累了很多经验</li><br /></ul><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-106761724313321955?l=lidaobing.blogspot.com' alt='' /></div>

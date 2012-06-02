@@ -59,3 +59,6 @@ task :tag_cloud do
   end
   puts 'Done.'
 end
+
+desc 'build'
+task :build => [:tags, :tag_cloud]

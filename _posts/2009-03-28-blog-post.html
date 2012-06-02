@@ -3,7 +3,7 @@ layout: post
 name: blog-post
 title: 平台，语言，库
 date: 2009-03-28 15:08:00.000000000 +08:00
-categories: []
+tags: language library platform
 permalink: /2009/03/blog-post.html
 ---
 在<span title="当然是unix平台出现之后">早期</span>的时候，要发展一门语言，需要考虑两件事情，语言本身，以及这个语言所用到的库，这时候的层次结构比较简单，就是 "操作系统 | 语言 | 库 | 程序"。<br /><br />稍后出现的 Java 引入了 JVM 平台的概念，现在的层次结构就变成了 "操作系统 | 平台 | 语言 | 库 | 程序"。<br /><br />这还不够, .NET 上的库已经不再依赖于语言，所以现在又变成了 "操作系统 | 平台+库 | 语言 | 程序"<br /><br />这样做的好处在于:<br /><ul><br /><li>创建一门新语言不再是一门庞大的工程，你无须创建库，语言的推广不再被你所需的库没有准备好，库没有稳定这类事情的拖累。</li><br /><li>当你想革新你的项目，采用一种新的语言时，不用在意如何移植旧项目，只要新旧语言能采用同一种平台即可</li><br /></ul><br /><br />事实上 JVM 平台早就有这种能力，不过却没有好好推广这种能力，早期只有 Java 和 JSP 这两种语言工作在 JVM 平台上(JSP的应用范围还严重受限)，Jython, Groovy, JRuby 之类语言很晚才得到一定程度的应用，这个时候 .NET 平台已经发展了很久了。<br /><br />这是我为什么不看好 D 语言的原因，他基于 C 语言的平台，却不能反馈给 C 平台(C++ 比他稍好，能用 extern "C" 的方式反馈)，当然这跟 C 平台本身也有一点关系，仅有 "栈", "堆", "函数" 这样几个概念，难免有些难用。<br /><br />同样我也不看好函数式语言成为一门通用的语言，他们与现有的平台的概念离得太远，同时又没有建设好自己的平台。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-7687724464948490354?l=lidaobing.blogspot.com' alt='' /></div>

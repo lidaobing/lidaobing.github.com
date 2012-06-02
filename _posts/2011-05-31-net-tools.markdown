@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "[备忘] 网络监控程序"
+tags: linux network monitor
 ---
 
 * nethogs: 按进程察看流量占用

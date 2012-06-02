@@ -4,10 +4,6 @@ name: sprintfsnprintf-ubuntudebian
 title: sprintf/snprintf 陷阱
 date: 2008-12-28 22:52:00.000000000 +08:00
 tags: ubuntu debian sprintf snprintf
-categories:
-- debian
-- c
-- ubuntu
 permalink: /2008/12/sprintfsnprintf-ubuntudebian.html
 ---
 最近 ubuntu/debian 正在讨论 sprintf/snprintf 的问题，我在这描述一遍。<br /><br />sprintf 的原型为:<br />int sprintf(char *restrict s, const char *restrict format, ...);<br /><br />其中 char* restrict s 的含义为通过s 指向的内存空间不得与其他指针参数指向的内存的空间重叠。比如如下的语句就是错误的用法, 因为参数1与参数3指向的内存重叠了。但这种做法作为增强版的 strcat 已被广泛使用。<br /><br />sprintf(buf, "%s foo %d %d", buf, var1, var2);<br /><br />在 ubuntu 8.10 所带的 gcc 中，如果编译时加入了优化选项(比如 -O1, -O2), 那么sprinf 会首先将 s 清空，比如如下的程序会输出 "fail", 而不是 "not fail"。
