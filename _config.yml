@@ -16,6 +16,7 @@ pygments:    false
 markdown:    maruku
 permalink:   date
 hostname: blog.lidaobing.com
+paginate: 10
 
 maruku:
   use_tex:    false
