@@ -6,25 +6,25 @@ layout: default
   <h2>Blogs</h2>
   <ul class="pager">
     {% if paginator.next_page %}
-  <li class="previous">
-    <a href="/page{{paginator.next_page}}">&larr; Older</a>
-  </li>
-  {% endif %}
+    <li class="previous">
+      <a href="/page{{paginator.next_page}}">&larr; Older</a>
+    </li>
+    {% endif %}
 
-       {% if paginator.page == 1 %}
-       {% elsif paginator.page == 2 %}
-  <li class="next">
-    <a href="/">Newer &rarr;</a>
-  </li>
-      {% else %}
-  <li class="next">
-    <a href="/page{{paginator.previous_page}}">Newer &rarr;</a>
-  </li>
-      {% endif %}
-</ul>
+    {% if paginator.page == 1 %}
+    {% elsif paginator.page == 2 %}
+    <li class="next">
+      <a href="/">Newer &rarr;</a>
+    </li>
+    {% else %}
+    <li class="next">
+      <a href="/page{{paginator.previous_page}}">Newer &rarr;</a>
+    </li>
+    {% endif %}
+  </ul>
   <ul class="posts">
     {% for post in paginator.posts %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
 

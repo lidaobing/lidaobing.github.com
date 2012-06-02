@@ -21,10 +21,10 @@ title: Postings tagged "#{tag}"
     HTML
 
     html << '<ul class="posts">'
+    posts = posts.map(&:to_liquid).sort_by{|x| x['date']}.reverse
     posts.each do |post|
-      post_data = post.to_liquid
       html << <<-HTML
-        <li><a href="#{post.url}">#{post_data['title']}</a></li>
+        <li><span>#{post['date'].strftime("%Y-%m-%d")}</span> &raquo; <a href="#{post['url']}">#{post['title']}</a></li>
       HTML
     end
     html << '</ul></div>'
