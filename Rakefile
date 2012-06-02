@@ -21,6 +21,7 @@ title: Postings tagged "#{tag}"
     HTML
 
     html << '<ul class="posts">'
+    html << "\n"
     posts = posts.map(&:to_liquid).sort_by{|x| x['date']}.reverse
     posts.each do |post|
       html << <<-HTML
