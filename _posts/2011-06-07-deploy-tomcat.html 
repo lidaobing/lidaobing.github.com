@@ -1,0 +1,123 @@
+---
+layout: post
+title: "[老文] tomcat 部署指南"
+tags: tomcat java
+---
+
+<p><span style="font-size: large;"><span style="line-height: 36px;">&nbsp;</span></span></p>
+<h1>下载与安装</h1>
+<ul>
+<li>个人建议不要使用发行版带的版本, 始终从主页来下载安装, 下载地址位于[1], 安装方法很简单, 直接解压即可, 建议解压到 /usr/local/ 目录, 再链接到 /usr/local/tomcat 目录</li>
+
+</ul>
+<ul>
+<li>创建目录 /data/apps/tomcat, 删除 $TOMCAT_HOME/webapps, 将 /data/apps/tomcat 软链接到 $TOMCAT_HOME/webapps</li>
+<li>创建目录 /data/logs/tomcat,&nbsp; 删除 $TOMCAT_HOME/logs, 将 /data/logs/tomcat 软链接到 $TOMCAT_HOME/logs</li>
+<li>如果 tomcat 无须监听 80 端口, 那么就没有必要使用 root 权限来跑, 那么就需要建立 tomcat 用户和 tomcat 用户组(tomcat 用户属于 tomcat 用户组), 再把 /usr/local/tomcat 下的文件owner 改为 tomcat.</li>
+<li>安装后的目录结构如[2]所示。</li>
+
+</ul>
+<p>[1] <a href="http://tomcat.apache.org/download-60.cgi" target="_blank">http://tomcat.apache.org/download-60.cgi</a></p>
+<p>[2] 目录结构示意图</p>
+<blockquote>/usr/local<br />|-- apache-tomcat-6.0.24<br />|&nbsp;&nbsp; |-- LICENSE<br />|&nbsp;&nbsp; |-- NOTICE<br />|&nbsp;&nbsp; |-- RELEASE-NOTES<br />|&nbsp;&nbsp; |-- RUNNING.txt<br />|&nbsp;&nbsp; |-- bin<br />|&nbsp;&nbsp; |-- conf<br />|&nbsp;&nbsp; |-- lib<br />|&nbsp;&nbsp; |-- logs -&gt; /data/logs/tomcat<br />|&nbsp;&nbsp; |-- temp<br />|&nbsp;&nbsp; |-- webapps -&gt; /data/apps/tomcat<br />|&nbsp;&nbsp; `-- work<br />`-- tomcat -&gt; apache-tomcat-6.0.24/</blockquote>
+<p>&nbsp;</p>
+<h1><a id="_27961938787255225_76295852110" name="_27961938787255225_76295852110"></a>配置</h1>
+<p>&nbsp;</p>
+<h2><a id="_7456906437222921_601622825113" name="_7456906437222921_601622825113"></a>基础配置</h2>
+<p>一般安装后需要调整如下的几个文件:</p>
+<ul>
+<li>conf/server.xml: 主要是调整端口, URI 编码, 自动部署, 访问日志配置<br />需要修改的部分已在下面红色的部分标明, 自动部署会带来一些麻烦, 比如 "OutOfMemoryError: PermGen Space", 访问日志部分(AccessLogValve)本来就在文件中, 不过被注释了, 去掉注释就可以了</li>
+
+</ul>
+<blockquote>&lt;Connector&nbsp;<strong>URIEncoding="UTF-8" port="80"</strong>&nbsp;protocol="HTTP/1.1"&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connectionTimeout="20000"&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; redirectPort="8443" /&gt;<br />...<br />&lt;Engine ...&gt;<br />&nbsp; &lt;Host name="localhost"&nbsp; appBase="webapps"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unpackWARs="true"&nbsp;<strong><span style="color: #000000;"><span>autoDeploy="false"</span></span></strong><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmlValidation="false" xmlNamespaceAware="false"&gt;<br />
+<div><strong><span style="color: #000000;">&lt;Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"&nbsp; prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/&gt;</span></strong></div>
+
+
+&nbsp; &lt;/Host&gt;<br />&lt;/Engine&gt;</blockquote>
+<ul>
+<li>bin/setenv.sh<br />需要创建该文件，加入一些环境配置(比如修改内存设置), 如下所示<br />CATALINA_OPTS="-XX:MaxPermSize=256M"</li>
+
+</ul>
+<p>&nbsp;</p>
+<h2><a id="_6714668687364816_518752949770" name="_6714668687364816_518752949770"></a>虚拟主机</h2>
+<p>虚拟主机也是在 server.xml 中配置, 范例如下</p>
+<blockquote>&lt;Engine name="Catalina" defaultHost="www.jxphone.com"&gt;<br />...<br />&nbsp;&nbsp; &nbsp;&lt;Host name="www.jxphone.com"&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;appBase="webapps/www.jxphone.com"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unpackWARs="true" autoDeploy="false"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmlValidation="false" xmlNamespaceAware="false"&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;Alias&gt;jxphone.com&lt;/Alias&gt;<br /><span style="color: #000000;">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;Valve className="org.apache.catalina.valves.AccessLogValve"&nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;directory="logs"&nbsp; prefix="www.jxphone.com_access_log."&nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;suffix=".txt" pattern="common" resolveHosts="false"/&gt;</span><br />&nbsp;&nbsp;&nbsp; &lt;/Host&gt;<br />&nbsp;&nbsp;&nbsp; &lt;Host name="bar.jxphone.com"&nbsp;&nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;appBase="webapps/bar.jxphone.com"<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unpackWARs="true" autoDeploy="false"<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;xmlValidation="false" xmlNamespaceAware="false"&gt;<br /><span style="color: #000000;">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &lt;Valve className="org.apache.catalina.valves.AccessLogValve"&nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;directory="logs"&nbsp; prefix="bar.jxphone.com_access_log."&nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;suffix=".txt" pattern="common" resolveHosts="false"/&gt;</span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&lt;/Host&gt;<br />&lt;/Engine&gt;</blockquote>
+<p>每个虚拟主机用一个&nbsp;<span style="font-family: 'courier new';">&lt;Host/&gt;</span>&nbsp;来配置, 其中&nbsp;<span style="font-family: 'courier new';">&lt;Alias/&gt;</span>&nbsp;是虚拟主机的别名, 可以有多个, Engine&nbsp; 的 defaultHost 属性表示使用 ip 地址直接访问时使用哪个主机, 也可以不设置 defaultHost 属性。</p>
+<h2><a id="https_9230758736290823_4526683" name="https_9230758736290823_4526683"></a>https</h2>
+<p><br />首先是要生成 keystore, 生成过程另文叙述, 然后把 keystore 拷贝到 conf 目录, 修改 server.xml 如下所示</p>
+<blockquote><span style="font-size: xx-small;">&lt;Connector URIEncoding="UTF-8" port="8080" protocol="HTTP/1.1"&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connectionTimeout="20000"&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; redirectPort="<span style="color: #ff0000;">443</span>" /&gt;<br /><span style="color: #ff0000;">&lt;Connector URIEncoding="UTF-8" port="443" protocol="HTTP/1.1" SSLEnabled="true"</span><br /><span style="color: #ff0000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; maxThreads="150" scheme="https" secure="true"</span><br /><span style="color: #ff0000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; clientAuth="false" sslProtocol="TLS" keystoreFile="conf/keystore" keystorePass="changeit" keyAlias="tomcat"/&gt;</span><br />&lt;Connector URIEncoding="UTF-8" port="8009" protocol="AJP/1.3" redirectPort="<span style="color: #ff0000;">443</span>" /&gt;<br /></span></blockquote>
+<p>PS. https 没有虚拟主机的概念, 所有的虚拟主机必须共享同一份 https 配置, 因为 https 协商加密在前, 传入 Host 参数在后。<br /><br /><br /></p>
+<h2><a id="apache_80737043003277_79920473" name="apache_80737043003277_79920473"></a>apache</h2>
+<p><br />如果需要把 java 的网站和 php 的网站联合部署在同一台机器上，则一般使用 apache 作为前端, 用 mod_jk 连接 tomcat</p>
+<ul>
+<li>首先需要安装 libapache2-mod-jk, 并在 apache 中激活, (Debian 下直接使用 "sudo apt-get install libapache2-mod-jk; sudo a2enmod jk" 即可, 其他系统还未试过)</li>
+
+</ul>
+<ul>
+<li>在 $TOMCAT_HOME/conf/server.xml 中修改 AJP connector 的配置: "&lt;Connector URIEncoding="UTF-8" port="8009" protocol="AJP/1.3" redirectPort="443" /&gt;", 注意 URIEncoding 一定记得加, redirectPort 是指转向 https 时所用的端口</li>
+
+</ul>
+<ul>
+<li>配置 /etc/libapache2-mod-jk/workers.properties, 根据注释填入全部数据即可</li>
+
+</ul>
+<ul>
+<li>新建文件 /etc/apache2/sites-available/tomcat, 输入如下的内容</li>
+
+</ul>
+<blockquote>&lt;VirtualHost *&gt;<br />&nbsp;&nbsp; &nbsp;ServerName www.jxphone.com<br />&nbsp;&nbsp; &nbsp;JkMount /* ajp13_worker<br />&lt;/VirtualHost&gt;<br />&lt;VirtualHost *&gt;<br />&nbsp;&nbsp; &nbsp;ServerName bar.jxphone.com<br />&nbsp;&nbsp; &nbsp;JkMount /* ajp13_worker<br />&lt;/VirtualHost&gt;</blockquote>
+<ul>
+<li>重启 apache (或者重新加载 apache 配置)即可</li>
+
+</ul>
+<p>另: apache 的访问日志比 tomcat 自带的好用, 如果全部使用 mod_jk 来访问, 那么可以去掉 server.xml 中<span style="color: #000000;">AccessLogValve</span>相关的配置, 缺省日志位置在 /var/log/apache2/other_vhosts_access.log<br /><br /></p>
+<h2><a id="_9893382734961357_324955072005" name="_9893382734961357_324955072005"></a>日志</h2>
+<p>tomcat 运行在安全模式下时,&nbsp; 能只读 war 包里面的文件, 能读写&nbsp;<a id="mg0j" title="workDir" href="http://tomcat.apache.org/tomcat-6.0-doc/config/host.html">workDir</a>&nbsp;里面的文件, 其他文件就需要在 $TOMCAT_HOME/conf/catalina.policy 里面申请<br /><br />简单的应用日志直接输送到终端即可, 比如按如下文件来配置 log4j.properties<br /><br /></p>
+<blockquote><span style="font-family: 'courier new';">log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender</span><br /><span style="font-family: 'courier new';">log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout</span><br /><span style="font-family: 'courier new';">log4j.appender.CONSOLE.layout.ConversionPattern=www.jxphone.com: %d{ABSOLUTE} %5p %c:%L - %m%n</span><br /><br /><span style="font-family: 'courier new';">log4j.rootLogger=info, CONSOLE</span></blockquote>
+<p>在 ConversionPattern 中加入一个前缀, 方便分离日志。<br /><br />日志的缺省位置在 $TOMCAT_HOME/logs/catalina.out<br /><br />复杂的应用仍需要使用独立的日志的系统</p>
+<h2><a id="_3093975801743718_5158116749766071" name="_3093975801743718_5158116749766071"></a>自动启动</h2>
+<p>将如下的文件放到 /etc/init.d/tomcat, 并链接到 /etc/rc2.d/S80tomcat<br /><br /></p>
+<blockquote><span style="font-family: 'courier new';">#!/bin/sh</span><br /><br /><span style="font-family: 'courier new';">TOMCAT_HOME=/usr/local/tomcat</span><br /><br /><span style="font-family: 'courier new';">case "$1" in</span><br /><span style="font-family: 'courier new';">start)</span><br />&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 'courier new';">echo $"Starting Tomcat"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; /bin/su tomcat $TOMCAT_HOME/bin/startup.sh</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;;;</span><br /><span style="font-family: 'courier new';">stop)</span><br />&nbsp;&nbsp; &nbsp;<span style="font-family: 'courier new';">echo $"Stopping Tomcat"</span><br /><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;/bin/su tomcat $TOMCAT_HOME/bin/catalina.sh stop</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;;;</span><br /><span style="font-family: 'courier new';">restart)</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; $0 stop</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; $0 start</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; ;;</span><br /><span style="font-family: 'courier new';">*)</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; echo "usage: $0 (start|stop|restart|help)"</span><br /><span style="font-family: 'courier new';">esac</span><br /><br /></blockquote>
+<h2><a id="__9706125031175824" name="__9706125031175824"></a>监控</h2>
+<ul>
+<li>修改 $TOMCAT_HOME/bin/setenv.sh, 加入如下一行</li>
+
+</ul>
+<blockquote>CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9012 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"</blockquote>
+<ul>
+<li>建立 $HOME/projects/utils/build.xml, 如下所示</li>
+
+</ul>
+<blockquote><span style="font-family: 'courier new';">&lt;project name="Catalina Ant JMX"&nbsp;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmlns:jmx="antlib:org.apache.catalina.ant.jmx"&nbsp;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; default="state"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; basedir="."&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;property name="jmx.server.name" value="localhost" /&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;property name="jmx.server.port" value="9012" /&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;property name="k1" value="machine-auth-51"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;property name="k2" value="tomcat"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;property name="k3" value="TODO"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;tstamp&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;format property="t" pattern="yyyy-MM-dd'T'HH:mm:ss"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;/tstamp&gt;</span><br /><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;target name="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;echo&gt;http://moshop.stat.jxphone.com/spdc/?param=s=0400000002|k1=${k1}|k2=${k2}|k3=${k3}|t=${t}|d=${d}"&lt;/echo&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;get src="http://moshop.stat.jxphone.com/spdc/?param=s=0400000002|k1=${k1}|k2=${k2}|k3=${k3}|t=${t}|d=${d}" dest="stat.response"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;/target&gt;</span><br />&nbsp;<br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;target name="state" description="Show JMX Cluster state"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jmx:open</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; host="${jmx.server.name}"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; port="${jmx.server.port}"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; username="controlRole"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password="tomcat"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jmx:get</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="java.lang:type=Memory"&nbsp;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; attribute="HeapMemoryUsage"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resultproperty="HeapMemoryUsage"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo="true"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jmx:get</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="java.lang:type=Memory"&nbsp;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; attribute="NonHeapMemoryUsage"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resultproperty="NonHeapMemoryUsage"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo="true"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;jmx:get</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;name="java.lang:type=OperatingSystem"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;attribute="OpenFileDescriptorCount"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;resultproperty="OpenFileDescriptorCount"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;echo="true"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;jmx:get</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;name="java.lang:type=OperatingSystem"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;attribute="MaxFileDescriptorCount"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;resultproperty="MaxFileDescriptorCount"</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;echo="true"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="HeapMemoryUsage.used"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${HeapMemoryUsage.used}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="HeapMemoryUsage.commited"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${HeapMemoryUsage.committed}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="HeapMemoryUsage.max"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${HeapMemoryUsage.max}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="NonHeapMemoryUsage.used"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${NonHeapMemoryUsage.used}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="NonHeapMemoryUsage.commited"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${NonHeapMemoryUsage.committed}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="NonHeapMemoryUsage.max"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${NonHeapMemoryUsage.max}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="OpenFileDescriptorCount"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${OpenFileDescriptorCount}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;antcall target="spdc"&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="k3" value="MaxFileDescriptorCount"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;param name="d" value="${MaxFileDescriptorCount}"/&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp; &nbsp;&lt;/antcall&gt;</span><br /><span style="font-family: 'courier new';">&nbsp;&nbsp;&nbsp; &lt;/target&gt;</span><br />&nbsp;<br />&lt;/project&gt;</blockquote>
+<ul>
+<li>运行 crontab -e, 加入如下两行</li>
+
+</ul>
+<p>&nbsp;</p>
+<blockquote>ANT_HOME=/usr/local/share/ant<br />55 23 * * * $ANT_HOME/bin/ant -f $HOME/projects/utils/build.xml &gt;&gt; $HOME/cron.log</blockquote>
+<h1><a id="_" name="_"></a>部署</h1>
+<p>&nbsp;</p>
+<h2><a id="_war_context_xml_9424890589323239" name="_war_context_xml_9424890589323239"></a>部署 war 包, 以及配置 context.xml</h2>
+<ol>
+<li>把 war 包拷贝到<a id="jp-5" title="虚拟主机" href="https://docs.google.com/Doc?docid=0AWRNSVaJq3r2ZGY0ejZyNjhfMTI1MGdrd2drNmhi&amp;hl=en#__6714668687364816" target="_self">虚拟主机</a>配 置中 appBase 属性所指定的目录, 比如 webapps/www.jxphone.com, 如果要部署到根目录("/"), 则命名为 ROOT.war, 如果要部署到 /api 目录, 则命名为 api.war, 如果要部署到深层次目录, 比如 /api/v1 目录, 则命名为 api#v1.war</li>
+<li>停止 tomcat 服务</li>
+<li>删除war包对应的已经展开的目录, 只保留 war 包</li>
+<li>如 果需要配置 context.xml, 则把 war 包里面的 META-INF/context.xml 拷贝到配置目录的对应位置, 比如 www.jxphone.com 的 api.war 的对应位置为 conf/Catalina/www.jxphone.com/api.xml (其中 Catalina 为 Engine 的名字, www.jxphone.com 为 Host 的名字, api.xml 的名字与 war 包的名字对应 (比如根目录用 ROOT.xml, /api/v1 目录用 api#v1.war)</li>
+<li>编辑 api.xml, 修改里边的相关参数</li>
+<li>如果 api.xml 有保密数据，比如数据库密码, 则关掉 api.xml 的所有用户可读权限, 比如 "chmod 640 api.xml"</li>
+<li>重启 tomcat 服务</li>
+
+</ol>
+<p><br />参考文献:</p>
+<ol>
+<li>Apache Tomcat Configuration Reference:&nbsp;<a id="pfkp" title="Environment Entries" href="http://tomcat.apache.org/tomcat-6.0-doc/config/context.html#Environment%20Entries">Environment Entries</a>,&nbsp;<a id="vqi0" title="Resource Definitions" href="http://tomcat.apache.org/tomcat-6.0-doc/config/context.html#Resource%20Definitions">Resource Definitions</a></li>
+<li><a id="e.zc" title="JNDI Datasource HOW-TO" href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html">JNDI Datasource HOW-TO</a></li>
+
+</ol>
+<p>&nbsp;</p>
+<h1><a id="__8302071619442667" name="__8302071619442667"></a>还未涉及到的内容</h1>
+<p>&nbsp;</p>
+<ul>
+<li>同时使用 apache 和 https</li>
+
+</ul>

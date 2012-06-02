@@ -1,0 +1,25 @@
+---
+layout: post
+title: "[读书笔记] go 语言如何处理系统调用"
+tags: go
+---
+<p><a href="http://www.cnblogs.com/lidaobing/archive/2011/10/07/difference-between-goroutine-and-erlang-process.html">上一篇博客</a>主要是讲如何避免在高并发下使用太多系统线程或进程，但如果仅仅是减少了线程数，CPU利用率本身没有上来，那么系统的容量很低，那么仍然无法达到高并发的目的。</p>
+<p>通常情况下，我们会设置线程数等于CPU数，充分利用CPU就等价于如何让线程一直工作，避免把时间浪费在等待系统调用返回上，从而提高系统容量。</p>
+<p>很多 linux 平台下的异步框架都基于 <a href="http://www.kernel.org/doc/man-pages/online/pages/man7/epoll.7.html" target="_blank">epoll</a> 来设计，但 epoll 本身只支持 fd, 也就是说能很好的支持文件IO以及socket, 但对于其他系统调用则无法处理，在调用时仍然会造成堵塞，比如 creat, unlink等等。在大部分情况下，能对文件IO和socket进行异步处理已经能满足我们的需求，比如 libevent, &nbsp;Java 的 NIO 都只提供了这些支持。</p>
+<p>node.js 支持得更多一些，具体可以参考他的&nbsp;<a href="http://nodejs.org/docs/v0.4.12/api/fs.html" target="_blank">fs 模块</a>&nbsp;，对大量的系统调用同时提供了同步调用和异步调用的接口。</p>
+<p>go 语言在编程的时候无需开发者对系统调用做特殊处理，我相信他在内部做了一些处理来支持他的高并发特性，但毕竟要眼见为实。</p>
+<p>go 语言与系统调用的模块放在 <a href="http://golang.org/pkg/syscall/">syscall package</a>，并在上面封装出了 "os", "time", "net" 等模块，并且建议直接使用后面的模块，单从 syscall 里边函数的接口来看，看不到任何异步非阻塞的迹象，只能从源代码的角度来分析。</p>
+<p>syscall package 的源码位于 <a href="http://code.google.com/p/go/source/browse/src/pkg/syscall/syscall_linux.go" target="_blank">src/pkg/syscall/syscall_linux.go&nbsp;</a>&nbsp;等文件，不过里边的函数都是简单地对更底层函数的一个包装，比如</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">sys   open(path string, mode int, perm uint32) (fd int, errno int)</span><span style="color: #008000;"><br /></span>func Open(path <span style="color: #0000ff;">string</span>, mode <span style="color: #0000ff;">int</span>, perm uint32) (fd <span style="color: #0000ff;">int</span>, errno <span style="color: #0000ff;">int</span>) {<br />        <span style="color: #0000ff;">return</span> open(path, mode|O_LARGEFILE, perm)<br />}</pre>
+</div>
+<p>真正按异步方式的代码位于&nbsp;<a href="http://code.google.com/p/go/source/browse/src/pkg/syscall/zsyscall_linux_amd64.go" target="_blank">src/pkg/syscall/zsyscall_linux_amd64.go</a>&nbsp;这样的文件里，这个文件是由上面的文件编译而成的，范例如下</p>
+<div class="cnblogs_code">
+<pre>func open(path <span style="color: #0000ff;">string</span>, mode <span style="color: #0000ff;">int</span>, perm uint32) (fd <span style="color: #0000ff;">int</span>, errno <span style="color: #0000ff;">int</span>) {<br />        r0, _, e1 := Syscall(SYS_OPEN, uintptr(<span style="color: #0000ff;">unsafe</span>.Pointer(StringBytePtr(path))), uintptr(mode), uintptr(perm))<br />        fd = <span style="color: #0000ff;">int</span>(r0)<br />        errno = <span style="color: #0000ff;">int</span>(e1)<br />        <span style="color: #0000ff;">return</span><br />}</pre>
+</div>
+<p>Syscall 的定义位于&nbsp;<a href="http://code.google.com/p/go/source/browse/src/pkg/syscall/asm_linux_amd64.s" target="_blank">src/pkg/syscall/asm_linux_amd64.s</a>, 是用汇编写成的，不过我不懂汇编(泪)</p>
+<div class="cnblogs_code">
+<pre>TEXT    &middot;<span style="color: #0000ff;">Syscall</span>(SB),<span style="color: #800080;">7</span>,$<span style="color: #800080;">0</span><br />        <span style="color: #0000ff;">CALL</span>    runtime&middot;entersyscall(SB)<br />        MOVQ    <span style="color: #800080;">16</span>(SP), DI<br />        MOVQ    <span style="color: #800080;">24</span>(SP), SI<br />        MOVQ    <span style="color: #800080;">32</span>(SP), DX<br />        MOVQ    $<span style="color: #800080;">0</span>, R10<br />        MOVQ    $<span style="color: #800080;">0</span>, R8<br />        MOVQ    $<span style="color: #800080;">0</span>, R9<br />        MOVQ    <span style="color: #800080;">8</span>(SP), AX       // <span style="color: #0000ff;">syscall</span> entry<br />        <span style="color: #0000ff;">SYSCALL</span><br />        CMPQ    AX, $0xfffffffffffff001<br />        JLS     ok<br />        MOVQ    $-<span style="color: #800080;">1</span>, <span style="color: #800080;">40</span>(SP)     // r1<br />        MOVQ    $<span style="color: #800080;">0</span>, <span style="color: #800080;">48</span>(SP)      // r2<br />        NEGQ    AX<br />        MOVQ    AX, <span style="color: #800080;">56</span>(SP)  // errno<br />        <span style="color: #0000ff;">CALL</span>    runtime&middot;exitsyscall(SB)<br />        <span style="color: #0000ff;">RET</span><br /><span style="color: #008080;">ok:</span><br />        MOVQ    AX, <span style="color: #800080;">40</span>(SP)      // r1<br />        MOVQ    DX, <span style="color: #800080;">48</span>(SP)      // r2<br />        MOVQ    $<span style="color: #800080;">0</span>, <span style="color: #800080;">56</span>(SP)      // errno<br />        <span style="color: #0000ff;">CALL</span>    runtime&middot;exitsyscall(SB)<br />        <span style="color: #0000ff;">RET</span></pre>
+</div>
+<p>其中&nbsp;runtime&middot;entersyscall 和&nbsp;runtime&middot;exitsyscall 位于&nbsp;<a href="http://code.google.com/p/go/source/browse/src/pkg/runtime/proc.c" target="_blank">src/pkg/runtime/proc.c</a></p>
+<p>分析不下去了，不过能确认的是, go 语言确实做了什么，避免了系统调用堵塞线程，保证了程序能充分使用 CPU。</p>

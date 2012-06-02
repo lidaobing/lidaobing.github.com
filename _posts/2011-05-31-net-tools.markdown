@@ -1,0 +1,10 @@
+---
+layout: post
+title: "[备忘] 网络监控程序"
+---
+
+* nethogs: 按进程察看流量占用
+* iptraf: 按连接察看流量占用
+* ethtool: 诊断工具
+* tcpdump: 抓包工具
+* 其他: dstat, ifstat, slurm, nload, bmon

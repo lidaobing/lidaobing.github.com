@@ -1,0 +1,11 @@
+---
+layout: post
+title: context switch 很高，谁干的
+tags: linux
+---
+<p>2.6.23 及以上内核可用</p>
+<div class="cnblogs_code">
+<pre># grep voluntary_ctxt_switches /proc<span style="color: #008000;">/*</span><span style="color: #008000;">/status | sort -rnk2 | head<br />/proc/1570/status:voluntary_ctxt_switches: 1029453<br />/proc/8143/status:voluntary_ctxt_switches: 835492<br />/proc/2463/status:voluntary_ctxt_switches: 710566<br />/proc/12204/status:voluntary_ctxt_switches: 584719<br />/proc/2463/status:nonvoluntary_ctxt_switches: 344170<br />/proc/12204/status:nonvoluntary_ctxt_switches: 252147<br />/proc/9684/status:voluntary_ctxt_switches: 200307<br />/proc/10354/status:voluntary_ctxt_switches: 165276<br />/proc/3/status:voluntary_ctxt_switches: 157927<br />/proc/10337/status:voluntary_ctxt_switches: 105313</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考：<br /><a href="http://careers.directi.com/display/tu/Understanding+Processes+in+Linux">http://careers.directi.com/display/tu/Understanding+Processes+in+Linux</a></p>

@@ -6,7 +6,7 @@ layout: default
   <h2>
     <a href="{{ page.url }}" title="{{ page.title }}" rel="bookmark">{{ page.title }}</a>
   </h2>
-     <time datetime='{{ post.date | date_to_utc | date:"%Y-%m-%dT%H:%M:00Z" }}' class='entry-time'>{{ post.date | date:"%B %d, %Y @ %H:%M" }}</time>
+  <div>{{page.date | date_to_string }}</div>
   {{ content }}
   <p class="alt-font tight">
     Tags:

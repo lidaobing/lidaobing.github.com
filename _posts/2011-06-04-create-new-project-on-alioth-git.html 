@@ -1,0 +1,39 @@
+---
+layout: post
+title: "[备忘] 在 git.debian.org 上建立新项目"
+tags: debian packaging git
+---
+
+<p>1. 在 alioth 网站注册[1], 并且申请加入一个特定的组, 比如 chinese 组</p>
+<p>[1]&nbsp;<a href="http://alioth.debian.org/">http://alioth.debian.org/</a></p>
+<p>[2]&nbsp;<a href="http://www.cnblogs.com/lidaobing/admin/http:/alioth.debian.org/projects/chinese/">http://alioth.debian.org/projects/chinese/</a></p>
+<p>2. 生成自己的SSH密钥</p>
+<p><span style="font-family: 'courier new', courier;">$ ssh-keygen -t rsa</span></p>
+<p>3. 上传公钥($HOME/.ssh/id_rsa.pub) 到 alioth</p>
+<p><a href="https://alioth.debian.org/account/editsshkeys.php">https://alioth.debian.org/account/editsshkeys.php</a></p>
+<p>4. 登录 git.debian.org</p>
+<p><span style="font-family: 'courier new', courier;">$ ssh git.debian.org -l ALIOTH_USER_NAME</span></p>
+<p><span style="font-family: 宋体;">5. 建立 SSH 仓库</span></p>
+<div class="cnblogs_code">
+<div><span style="color: #000000;">lidaobing@vasks$ cd </span><span style="color: #000000;">/</span><span style="color: #000000;">git</span><span style="color: #000000;">/</span><span style="color: #000000;">chinese<br />lidaobing@vasks$ mkdir debian</span><span style="color: #000000;">-</span><span style="color: #000000;">zh</span><span style="color: #000000;">-</span><span style="color: #000000;">faq.git<br />lidaobing@vasks$ cd debian</span><span style="color: #000000;">-</span><span style="color: #000000;">zh</span><span style="color: #000000;">-</span><span style="color: #000000;">faq.git<br />lidaobing@vasks$ git </span><span style="color: #000000;">--</span><span style="color: #000000;">bare init </span><span style="color: #000000;">--</span><span style="color: #000000;">shared<br />lidaobing@vasks$ vi description <br />lidaobing@vasks$ mv hooks</span><span style="color: #000000;">/</span><span style="color: #000000;">post</span><span style="color: #000000;">-</span><span style="color: #000000;">update.sample hooks</span><span style="color: #000000;">/</span><span style="color: #000000;">post</span><span style="color: #000000;">-</span><span style="color: #000000;">update<br />lidaobing@vasks$ chmod </span><span style="color: #000000;">+</span><span style="color: #000000;">x hooks</span><span style="color: #000000;">/</span><span style="color: #000000;">post</span><span style="color: #000000;">-</span><span style="color: #000000;">update</span></div>
+<div><span style="color: #000000;">lidaobing@vasks$ exit</span></div>
+</div>
+<p>6.&nbsp;访问如下的网页确认</p>
+<p><a href="http://anonscm.debian.org/gitweb/?p=chinese/debian-zh-faq.git">http://anonscm.debian.org/gitweb/?p=chinese/debian-zh-faq.git</a></p>
+<p>7. 导入当前的版本</p>
+<pre>
+$ mkdir tmp1; cd tmp1
+$ dget http://cdn.debian.net/debian/pool/main/d/debian-zh-faq/debian-zh-faq_1.11.dsc
+$ mkdir debian-zh-faq
+$ cd debian-zh-faq
+$ git init
+$ git-import-dsc ../debian-zh-faq_1.11.dsc
+$ git remote add origin git+ssh://git.debian.org/git/chinese/debian-zh-faq.git
+$ git push --tags origin master
+</pre>
+<p>8.&nbsp;访问如下的网页确认</p>
+<p><a href="http://anonscm.debian.org/gitweb/?p=chinese/debian-zh-faq.git">http://anonscm.debian.org/gitweb/?p=chinese/debian-zh-faq.git</a></p>
+<p><span style="font-family: 宋体;">参考文献:</span></p>
+<p><span style="font-family: 宋体;">  <a href="http://wiki.debian.org/Alioth/SSH">http://wiki.debian.org/Alioth/SSH</a></span></p>
+<p><span style="font-family: 宋体;">  <a href="http://wiki.debian.org/Alioth/Git">http://wiki.debian.org/Alioth/Git</a></span></p>
+<p><span style="font-family: 宋体;">  <a href="http://www.cnblogs.com/lidaobing/archive/2010/05/20/debian-packaging-with-git.html">http://www.cnblogs.com/lidaobing/archive/2010/05/20/debian-packaging-with-git.html</a><br /></span></p>

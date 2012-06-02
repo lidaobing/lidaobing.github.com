@@ -1,0 +1,22 @@
+---
+layout: post
+title: "[读书笔记] goroutine 与 erlang process 的区别"
+tags: go goroutine erlang
+---
+<p>在传统的服务器编程模型中，我们会为每一个请求分配一个线程，请求结束后终止该线程，或者把线程放回线程池。 Java 的 Servlet 就属于这种模型的典型。对于 PHP, Ruby, Python 这些语言，要么对于多线程支持不好，要么在多线程下表现不好，通常我们会为每个请求分配一个进程，但整体模型都差不多。</p>
+<p>通常我们的请求并不是一直在消耗CPU, 一个请求的大部分时间都花在等待磁盘，数据库，cache，其他服务返回上面，或者说等待一个事件发生(比如 web 版的 IM, 通常会建立一个 HTTP 请求，等待其他人给你发消息)。 所以对于一个8核的 CPU，支撑100个并发，CPU消耗并不大，负载也不会太高，甚至 1000 左右的并发请求数也不会有大问题。但在高并发下，首先是由于线程数/进程数过多消耗了太多的内存资源，同时大部分CPU都消耗在上下文切换上边，所以系统负载很高，服务器效率大幅度降低，服务响应变慢甚至不可用。</p>
+<p>为了让服务器支持高并发，通常我们需要一个新的框架来处理这些请求，比如 Java 这边就有 comet和netty, python 有 tornado, ruby 有 eventmachine。还有很多直接基于 epoll 系统调用, 或者基于 libevent, libev, libcoro的应用。</p>
+<p>在解决这个问题时，发展出了 reactor[1] 和 proactor[2] 两种设计模式, 关于 reactor 模式，可以参考一下 libevent, netty 的编程范例。关于 proactor 模式，可以参考一下 node.js， Java NIO.2[3] &nbsp;的编程范例，在此不做解释。对于 libcoro, jscex[4]，从实现层面上仍然可以认为是 proactor 模式，但避免了写大量的 callback 方法，所以更加易用。</p>
+<p>go 语言用于解决高并发的技术被成为 <strong>goroutine</strong>[5], 与 erlang 的 process 类似，但仍然有如下的不同</p>
+<ol>
+<li>erlang 接收消息的主题是 erlang process, go 语言是 channel</li>
+<li>一个 goroutine 可以引用多个 channel, 同样一个 channel 也可以被多个 goroutine 引用 (对于常规的生产者-消费者模型， goroutine 比 erlang 方便)</li>
+<li>channel 属于强类型，在编译期可以检查出更多的错误，如果一个 goroutine 希望接收多种类型的消息，一般可以引用多个channel</li>
+<li>channel 可以设置为堵塞型或者设定一个 buffer size, 并且可以用select测试 channel 是否已满， erlang 则无法测试(?)</li>
+</ol>
+<div>在编程模型上， goroutine 应该属于reactor 模式，但与常规的 reactor 模式有很大的不同。常规的 reactor 模式中，每处等待都需要占用一个线程，所以通常我们只会使用 1-2 个线程来做等待(比如接收请求处放一个，在异步操作时放一个)，在等待处再根据事件类型来进行事件分发和后续处理。但由于我们需要区分所有的事件，通常我们会设计出一组单根，复杂的事件类型(比如 Java 下)，这对编程人员来说很不利，特别是需要各个模块协作的时候，同时在等待处会出现代码庞大，业务逻辑集中在一处的问题。对于 goroutine, 通常每个 goroutine 会有自己的 reactor 代码(即 select)，更多是通过语言方面的机制来避免每处 select 占用一个线程, 业务逻辑被分解到各个 goroutine 内部，无需集中在一处，对开发有利。</div>
+<p>[1]&nbsp;<a href="http://en.wikipedia.org/wiki/Reactor_pattern">http://en.wikipedia.org/wiki/Reactor_pattern</a></p>
+<p>[2]&nbsp;<a href="http://en.wikipedia.org/wiki/Proactor_pattern">http://en.wikipedia.org/wiki/Proactor_pattern</a></p>
+<p>[3]&nbsp;<a href="http://jcp.org/en/jsr/detail?id=203">http://jcp.org/en/jsr/detail?id=203</a></p>
+<p>[4]&nbsp;<a href="https://github.com/JeffreyZhao/jscex">https://github.com/JeffreyZhao/jscex</a></p>
+<p>[5]&nbsp;<a href="http://golang.org/doc/GoCourseDay3.pdf">http://golang.org/doc/GoCourseDay3.pdf</a></p>
