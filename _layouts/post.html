@@ -14,6 +14,15 @@ layout: default
     <a href="http://www.google.com/search?q={{ tag | escape }}+site:blog.lidaobing.com">{{ tag }}</a>{% if forloop.last == false %}, {% endif %}
     {% endfor %}
   </p>
+  <side id="related-posts">
+    <h3> Related Posts:</h3>
+    <ul>
+      {% for post in site.related_posts %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </side>
+
   <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
