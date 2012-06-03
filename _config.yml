@@ -5,6 +5,7 @@ server_port: 4000
 baseurl:    /
 url: http://blog.lidaobing.com
 title: "LI Daobing's Blog"
+description: "LI Daobing's Blog"
 
 source:      .
 destination: ./_site
@@ -17,6 +18,8 @@ markdown:    maruku
 permalink:   date
 hostname: blog.lidaobing.com
 paginate: 10
+author: "LI Daobing"
+author_email: "lidaobing@gmail.com"
 
 maruku:
   use_tex:    false
