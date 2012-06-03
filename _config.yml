@@ -17,7 +17,7 @@ pygments:    false
 markdown:    maruku
 permalink:   date
 hostname: blog.lidaobing.com
-paginate: 10
+paginate: 20
 author: "LI Daobing"
 author_email: "lidaobing@gmail.com"
 
