@@ -10,7 +10,7 @@ layout: nil
         <lastmod>{{ post.lastmod | date_to_xmlschema }}</lastmod>
         {% else %}
         <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
-        {% end %}
+        {% endif %}
     </url>
     {% endfor %}
 </urlset>

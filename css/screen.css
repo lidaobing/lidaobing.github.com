@@ -1,3 +1,18 @@
+body {
+  background: #E5EBF1;
+  color: #0B133F;
+}
+
+.well {
+background-color: #C8E9DA;
+border-style: double;
+border-width: 10px;
+border-color: #BECBCF;
+}
+
+a {
+  color: #0B133F;
+}
 .comment-count {
   float: right;
 }
