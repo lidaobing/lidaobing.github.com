@@ -21,39 +21,13 @@ tags: jekyll
 
 这个其实比较简单，因为 Jekyll 的模板系统支持 xml, 范例可以参考[这个站点的源码](https://github.com/lidaobing/lidaobing.github.com)，另外 Jekyll 系统的 post 只有一个实践，如果你更新了一个 blog, 并且想在这些文件中体现，你需要在你的 post 中引入一个新的变量，并在模板文件中体现，比如 post 的 头部如下所示:
 
-{% raw %}
-
-      ---
-      layout: post
-      title: 机房网段更改后，如何避免在机房逐台更改IP?
-      lastmod: 2012-06-01
-      ---
-
-      some text
-
-{% endraw %}
+<script src="https://gist.github.com/2863781.js?file=gistfile1.haml">
+</script>
 
 然后 site.xml 如下所示
-{% raw %}
 
-      ---
-      layout: nil
-      ---
-      <?xml version='1.0' encoding='UTF-8'?>
-      <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
-          {% for post in site.posts %}
-          <url>
-              <loc>{{ site.url }}{{ post.url }}</loc>
-              {% if post.lastmod %}
-              <lastmod>{{ post.lastmod | date_to_xmlschema }}</lastmod>
-              {% else %}
-              <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
-              {% endif %}
-          </url>
-          {% endfor %}
-      </urlset>
-
-{% endraw %}
+<script src="https://gist.github.com/2863783.js?file=gistfile1.xml">
+</script>
 
 ### 4. tag, category
 
