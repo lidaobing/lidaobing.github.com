@@ -66,7 +66,7 @@ tag 的 layout 文件
 
 然后在你的 sidebar 中 include 生成的文件即可。 category 也是类似。每次更新后运行 `rake build` 即可 (build 依赖前面的两个任务)。
 
-### 5. PS
+### 5. PS1
 
 在 markdown 文件中 embed gist 文件时，记得把 </script> 放在第二行，比如
 
@@ -77,7 +77,6 @@ tag 的 layout 文件
       <script src="https://gist.github.com/2863678.js?file=gistfile1.rb">
       </script>
 
+### 6. PS2
 
-
-
-
+当你想写一篇关于 jekyll 的文档是，请尽量把所有会导致 jekyll 错乱的代码都扔到 gist, 否则就会像我一样，发布到第4次才成功。
