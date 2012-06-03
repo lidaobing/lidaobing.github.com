@@ -9,27 +9,15 @@ task :tags do
   site = Jekyll::Site.new(options)
   site.read_posts('')
   site.tags.sort.each do |tag, posts|
-    html = ''
-    html << <<-HTML
+    html = <<-HTML
 ---
-layout: default
+layout: tag_index
+tag_name: "#{tag}"
 title: Postings tagged "#{tag}"
 ---
 
-<div class="well">
-<h2 id="#{tag}">Postings tagged "#{tag}"</h2>
+
     HTML
-
-    html << '<ul class="posts">'
-    html << "\n"
-    posts = posts.map(&:to_liquid).sort_by{|x| x['date']}.reverse
-    posts.each do |post|
-      html << <<-HTML
-        <li><span>#{post['date'].strftime("%Y-%m-%d")}</span> &raquo; <a href="#{post['url']}">#{post['title']}</a></li>
-      HTML
-    end
-    html << '</ul></div>'
-
     File.open("tags/#{tag}.html", 'w+') do |file|
       file.puts html
     end

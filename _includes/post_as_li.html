@@ -1,0 +1,6 @@
+<li>
+  <span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a>
+  <span class="comment-count">
+    <a href="{{ post.url }}#disqus_thread" data-disqus-identifier="{{ post.id }}"></a>
+  </span>
+</li>
