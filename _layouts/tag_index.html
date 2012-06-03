@@ -2,12 +2,10 @@
 layout: default
 ---
 
-<div class="well">
 <h2 id="approx">Postings tagged "{{ page.tag_name }}"</h2>
 <ul class="posts">
   {% for post in site.tags[page.tag_name] %}
   {% include post_as_li.html %}
   {% endfor %}
 </ul>
-</div>
 {% include disqus_count.html %}
