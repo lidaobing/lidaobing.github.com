@@ -7,7 +7,6 @@ url: http://blog.lidaobing.com
 title: "LI Daobing's Blog"
 description: "LI Daobing's Blog"
 
-source:      .
 destination: ./_site
 plugins:     ./_plugins
 
