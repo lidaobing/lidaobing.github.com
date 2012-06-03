@@ -2,7 +2,6 @@
 layout: default
 ---
 
-<div class="well">
   <h2>Blogs</h2>
   <ul class="pager">
     {% if paginator.next_page %}
@@ -27,5 +26,4 @@ layout: default
     {% include post_as_li.html %}
     {% endfor %}
   </ul>
-</div>
 {% include disqus_count.html %}

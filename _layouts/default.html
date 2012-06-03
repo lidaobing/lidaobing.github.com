@@ -35,7 +35,10 @@
     {% include header.html %}
     <div class="row">
       <div id="main" class="span{% if page.no_sidebar %}12{% else %}9{% endif %}">
-        {{ content}}
+          <div id="cse"></div>
+        <div class="well">
+            {{ content }}
+        </div>
       </div>
       {% unless page.no_sidebar %}
         <div id="sidebar" class="span3">
