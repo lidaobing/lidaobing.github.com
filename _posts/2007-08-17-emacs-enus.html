@@ -1,7 +1,7 @@
 ---
 layout: post
 name: emacs-enus
-title:
+title: "在 en_US.UTF-8 环境下使用emacs"
 date: 2007-08-17 23:03:00.000000000 +08:00
 tags: emacs
 categories:
@@ -10,4 +10,4 @@ categories:
 - emacs
 permalink: /2007/08/emacs-enus.html
 ---
-<h1>Emacs</h1><br /><h2>在 en_US.UTF-8 环境下使用emacs<br /></h2><ol><li>建议在 LC_CTYPE=zh_CN.UTF-8 环境下运行 emacs, 否则emacs无法正确判定应当使用何种字体来显示中文字符(他会优先使用日语、繁体中文字体来显示简体中文)，细节可以参看 mule-cmds.el</li><li>在 $HOME/.emacs 中加如下两句<br /><span style="font-family:Courier New;">(setq current-language-environment "Chinese-GB")<br /></span><span style="font-family:Courier New;">(prefer-coding-system 'utf-8)<br /></span>这时你用"C-h v coding-category-list"可以看到coding-category-list等于<br /><span style="font-family:Courier New;">(coding-category-utf-8 </span><span style="font-family:Courier New;">coding-category-iso-8-2 coding-category-big5 coding-category-iso-7-else </span><span style="font-family:Courier New;">coding-category-iso-8-1 coding-category-utf-16-be </span><span style="font-family:Courier New;">coding-category-utf-16-le coding-category-iso-7-tight </span><span style="font-family:Courier New;">coding-category-iso-7 coding-category-iso-8-else </span><span style="font-family:Courier New;">coding-category-emacs-mule coding-category-raw-text </span><span style="font-family:Courier New;">coding-category-sjis coding-category-ccl coding-category-binary)<br /></span>其中coding-category-iso-8-2就是chinese-iso-8bit，也就是gb2312<br /> </li></ol><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-1256002071114158681?l=lidaobing.blogspot.com' alt='' /></div>
+<ol><li>建议在 LC_CTYPE=zh_CN.UTF-8 环境下运行 emacs, 否则emacs无法正确判定应当使用何种字体来显示中文字符(他会优先使用日语、繁体中文字体来显示简体中文)，细节可以参看 mule-cmds.el</li><li>在 $HOME/.emacs 中加如下两句<br /><span style="font-family:Courier New;">(setq current-language-environment "Chinese-GB")<br /></span><span style="font-family:Courier New;">(prefer-coding-system 'utf-8)<br /></span>这时你用"C-h v coding-category-list"可以看到coding-category-list等于<br /><span style="font-family:Courier New;">(coding-category-utf-8 </span><span style="font-family:Courier New;">coding-category-iso-8-2 coding-category-big5 coding-category-iso-7-else </span><span style="font-family:Courier New;">coding-category-iso-8-1 coding-category-utf-16-be </span><span style="font-family:Courier New;">coding-category-utf-16-le coding-category-iso-7-tight </span><span style="font-family:Courier New;">coding-category-iso-7 coding-category-iso-8-else </span><span style="font-family:Courier New;">coding-category-emacs-mule coding-category-raw-text </span><span style="font-family:Courier New;">coding-category-sjis coding-category-ccl coding-category-binary)<br /></span>其中coding-category-iso-8-2就是chinese-iso-8bit，也就是gb2312<br /> </li></ol><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/6324560-1256002071114158681?l=lidaobing.blogspot.com' alt='' /></div>
