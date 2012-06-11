@@ -19,3 +19,9 @@ a {
 .comment-count a {
   color: black;
 }
+
+ul.posts div.post {
+  display: inline-block;
+	width: 100%;
+	vertical-align: top;
+}
