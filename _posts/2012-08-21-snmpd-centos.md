@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Deploy snmpd on CentOS for jiankongbao"
-tags: centos snmpd jiankongbao
+tags: centos snmpd jiankongbao snmp
 ---
 
 * install net-snmp
