@@ -17,6 +17,13 @@ tags: centos snmpd jiankongbao snmp
 
 * run `sudo /etc/init.d/snmpd restart`
 * run `sudo chkconfig snmpd on`
+* if you have iptables
+
+      $ sudo iptables -I INPUT 1 -p udp -s 60.195.252.107 --dport 161 -j ACCEPT
+      $ sudo iptables -I INPUT 1 -p udp -s 60.195.252.110 --dport 161 -j ACCEPT
+      $ sudo cp /etc/sysconfig/iptables /etc/sysconfig/iptables.bak
+      $ sudo iptables-save | sudo tee /etc/sysconfig/iptables
+
 * verify everything is ok
 
       $ netstat -lpnu | grep 161
