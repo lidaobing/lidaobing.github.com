@@ -27,7 +27,7 @@ tags: rest
 <p>相比之下 XML-RPC[1], JSON-RPC[2] 在返回码设计上则更统一，更方便处理。</p>
 <p>[1]&nbsp; <a href="http://www.xmlrpc.com/spec">http://www.xmlrpc.com/spec</a></p>
 <p>[2]&nbsp; <a href="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal">http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal</a></p>
-<h2>2. 为了 REST 而引入轻易地引入新的实体/概念</h2>
+<h2>2. 为了 REST 而轻易地引入新的实体/概念</h2>
 <p>一个经常被提起的例子是转帐, 为了让 REST 更加自然，经常会引入一个新概念来封装这个行为。但这有几个问题</p>
 <ul>
 <li>REST 只是一个接口设计模式, 你是否愿意为了你的接口设计去污染你的领域设计？轻量级的东西你还可以保持一个干净的接口肮脏的实现，重量级的东西你是否还舍得？</li>
