@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[备忘]串号是如何发生的，我的一次串号查找经历"
+title: "[备忘]串号是如何发生的，我的一次串号Bug查找经历"
 tags: ruby sinatra rack unicorn
 ---
 
