@@ -11,37 +11,37 @@ tags: ruby language
 
 口语中常用的还有省略主语，比如说 “give me five” 比说 "you give me five" 更自然，Ruby, JS 等语言对这个都有一定的支持，比如 Ruby 的 `factory_girl` 的范例代码, 用 `name` 比用 `user.name` 不仅节省了击键次数，也让表达更加自然。
 
-  FactoryGirl.define do
-    factory :user do
-      name 'John Doe'
-      date_of_birth { 21.years.ago }
+    FactoryGirl.define do
+      factory :user do
+        name 'John Doe'
+        date_of_birth { 21.years.ago }
+      end
     end
-  end
 
 
 ## 现在的工业级语言在世俗化方面够好了么？
 
 未必，请看下面一个例子，目标是对一个数组的每个数取平方
 
-  # Java
-  List<Integer> src = Arrays.asList(1,2,3);
-  List<Integer> dst = new ArrayList<Integer>(3);
-    for(Integer i: src) {
-    dst.add(i*i);
-  }
+    # Java
+    List<Integer> src = Arrays.asList(1,2,3);
+    List<Integer> dst = new ArrayList<Integer>(3);
+      for(Integer i: src) {
+      dst.add(i*i);
+    }
 
 Java 的显然过于繁琐
 
-  # Python
-  a = [1,2,3]
-  [x*x for x in a]
-  map(lambda(x):x*x, a)
+    # Python
+    a = [1,2,3]
+    [x*x for x in a]
+    map(lambda(x):x*x, a)
 
 python 提供了两种方式, 但就自然来讲，都不够。
 
-  # Ruby
-  a = [1,2,3]
-  a.map{|x| x*x}
+    # Ruby
+    a = [1,2,3]
+    a.map{|x| x*x}
 
 从我的角度来看，Ruby 的表达是最自然的。
 
@@ -53,7 +53,7 @@ Ruby 自己为每个类定义了很多成员函数(比如数组的成员函数�
 
 开放类的坏处也很明显，就是可能存在名字冲突，但解决方案也很简单，大家可以看看 underscore.js 和  jQuery 的例子
 
-  _([1,2,3]).map(function(x){return x*x;})
-  $(".alert").show()
+    _([1,2,3]).map(function(x){return x*x;})
+    $(".alert").show()
 
 用一个全局函数来引入你的扩展，就可以避免开放类的名字冲突，而且使用/阅读起来也很方便。
