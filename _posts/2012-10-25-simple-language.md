@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "世俗化的语言"
+title: "世俗化的编程语言"
 tags: ruby language
 ---
 
