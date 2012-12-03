@@ -1,0 +1,40 @@
+---
+layout: post
+name: '1'
+title: "如何向 debian 提交 bug"
+date: 2006-09-25 20:02:00.000000000 +08:00
+tags: debian reportbug msmtp
+---
+<ol>
+  <li>安装reportbug, msmtp</li>
+  <li>修改 <tt>$HOME/.reportbugrc</tt>
+    <pre>
+reportbug_version "3.29.3"
+mode advanced
+offline
+no-cc
+header "X-Debbugs-CC: lidaobing@gmail.com"
+mta /usr/bin/msmtp
+# 实际上是先运行"reportbug --config"，然后再手动修改的
+# 使用offline的原因是reportbug自带的bug查询太慢了，比我用firefox打开bugs.debian.org/packagename还慢
+# 使用msmtp的原因是reportbug自带的smtp服务器不稳定，经常不能用(至少对于我来说是如此)
+    </pre>
+  </li>
+  <li>修改 <tt>$HOME/.msmtprc</tt>
+    <pre>
+host smtp.gmail.com
+port 465
+auth plain
+from lidaobing@gmail.com
+user lidaobing@gmail.com
+password "xxxxxxxx"
+tls
+tls_nostarttls
+logfile ~/.msmtp.log
+# 我使用的是gmail，如果你们用其他邮箱，这个配置文件可能不适用
+# from, user, password 记得改成你自己的
+    </pre>
+  </li>
+  <li>运行<tt>reportbug qterm</tt> ，就可以向qterm提交bug了
+  </li>
+</ol>
