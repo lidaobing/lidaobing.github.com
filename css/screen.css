@@ -13,6 +13,10 @@ border-color: #BECBCF;
 a {
   color: #0B133F;
 }
+#content a {
+  color: #08c;
+}
+
 .comment-count {
   float: right;
 }
