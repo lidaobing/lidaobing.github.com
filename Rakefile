@@ -51,3 +51,8 @@ end
 
 desc 'build'
 task :build => [:tags, :tag_cloud]
+
+desc 'dev'
+task :dev do
+  `bundle exec jekyll serve`
+end
