@@ -7,7 +7,7 @@ task :tags do
 
   options = Jekyll.configuration({})
   site = Jekyll::Site.new(options)
-  site.read_posts('')
+  site.reader.read
   site.tags.sort.each do |tag, posts|
     html = <<-HTML
 ---
@@ -34,7 +34,7 @@ task :tag_cloud do
 
   options = Jekyll.configuration({})
   site = Jekyll::Site.new(options)
-  site.read_posts('')
+  site.reader.read
   html = '<h4>Tags</h4><ul class="tag-cloud">'
   site.tags.sort_by{|k,v| -v.count}.slice(0,10).each do |tag, posts|
     html << <<-HTML
@@ -54,5 +54,6 @@ task :build => [:tags, :tag_cloud]
 
 desc 'dev'
 task :dev do
+  puts 'please visit http://localhost:4000'
   `bundle exec jekyll serve`
 end
