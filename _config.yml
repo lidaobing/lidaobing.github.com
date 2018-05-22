@@ -6,8 +6,7 @@ title: "LI Daobing's Blog"
 description: "LI Daobing's Blog"
 
 destination: ./_site
-plugin: [jekyll-paginate]
-gems: [jekyll-paginate]
+plugins: [jekyll-paginate]
 
 future:      true
 lsi:         false
