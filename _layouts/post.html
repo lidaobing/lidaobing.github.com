@@ -5,7 +5,10 @@ layout: default
   <h2>
     <a href="{{ page.url }}" title="{{ page.title }}" rel="bookmark">{{ page.title }}</a>
   </h2>
-  <div>{{page.date | date_to_string }}</div>
+  <div>{{page.date | date_to_string }}
+    / <a href="https://github.com/lidaobing/lidaobing.github.com/edit/master/{{page.path}}">Edit</a>
+    / <a href="https://github.com/lidaobing/lidaobing.github.com/commits/master/{{page.path}}">History</a>
+  </div>
   <div id="content">
     {{ content }}
   </div>
