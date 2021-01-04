@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
 
-gem 'github-pages'
+gem 'github-pages', '>= 185'
 gem 'rake'
 gem 'jekyll-paginate'
