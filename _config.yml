@@ -10,7 +10,7 @@ plugins: [jekyll-paginate]
 
 future:      true
 lsi:         false
-highlighter:    pygments
+highlighter: rouge
 markdown:    kramdown
 permalink:   date
 hostname: blog.lidaobing.com
