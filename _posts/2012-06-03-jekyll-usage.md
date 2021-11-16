@@ -72,7 +72,7 @@ tag 的 layout 文件
 
       <script src="https://gist.github.com/2863678.js?file=gistfile1.rb"></script>
 
-会导致所有之后的文字不现实，改成如下形式后即可工作
+会导致所有之后的文字不显示，改成如下形式后即可工作
 
       <script src="https://gist.github.com/2863678.js?file=gistfile1.rb">
       </script>
